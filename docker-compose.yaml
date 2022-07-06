@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+    nginx: 
+        image: "nginx:latest"
+        container_name: "nginx"
+        hostname: "nginx"
+        healthcheck:
+            test: ["CMD", "curl", "-I", "http://localhost:4444"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 0s
+        labels:
+            - "healthcheck.restarter=true"
+        networks:
+            - "restarter"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "2"
+    restarter: 
+        image: "samuray/healthcheck-restarter:0.1.1"
+        container_name: "restarter"
+        hostname: "restarter"
+        environment:
+            - "HEALTHCHECK_RESTARTER_LOGGER_LEVEL=trace"
+        networks:
+            - "restarter"
+        volumes:
+            - "/var/run/docker.sock:/var/run/docker.sock"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "200k"
+                max-file: "2"
+networks:
+    restarter:
+        external: false
+        driver: "bridge"
+        name: "restarter"

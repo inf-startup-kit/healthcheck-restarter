@@ -1,7 +1,7 @@
 {
-    "name": "template",
-    "version": "0.0.1",
-    "description": "Template for nodejs app with fastify",
+    "name": "healthcheck-restarter",
+    "version": "0.1.1",
+    "description": "Restart not healthy docker container",
     "scripts": {
         "up": "ncu --configFilePath ./_common --configFileName ncu_up_config.json && rimraf ./package-lock.json && npm i && ncu --configFilePath ./_common --configFileName ncu_config.json",
         "ncu": "ncu --configFilePath ./_common --configFileName ncu_config.json",
@@ -17,19 +17,20 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/samurayii/fastify-app-starter.git"
+        "url": "git+https://github.com/inf-startup-kit/healthcheck-restarter.git"
     },
     "keywords": [
-        "typescript",
-        "fastify",
-        "template"
+        "docker",
+        "administration",
+        "healthy",
+        "system"
     ],
     "author": "Nuzhnov A.A.",
     "license": "GNU GPLv3",
     "bugs": {
-        "url": "https://github.com/samurayii/fastify-app-starter/issues"
+        "url": "https://github.com/inf-startup-kit/healthcheck-restarter/issues"
     },
-    "homepage": "https://github.com/samurayii/fastify-app-starter.git#readme",
+    "homepage": "https://github.com/inf-startup-kit/healthcheck-restarter.git#readme",
     "optionalDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.25.0",
         "@typescript-eslint/parser": "^5.25.0",
@@ -39,6 +40,7 @@
     },
     "devDependencies": {
         "@types/chai": "^4.3.1",
+        "@types/dockerode": "=3.2.7",
         "@types/mocha": "^9.1.1",
         "@types/node": "^17.0.35",
         "@types/superagent": "^4.1.15",
@@ -64,6 +66,7 @@
     "dependencies": {
         "chalk": "=4.1.2",
         "commander": "^9.2.0",
+        "dockerode": "=3.3.1",
         "fastify": "^3.29.0",
         "json-from-default-schema": "^1.0.1",
         "jtomler": "^1.0.1",

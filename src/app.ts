@@ -2,14 +2,21 @@ import config from "./lib/init";
 import chalk from "chalk";
 import { LoggerEventEmitter } from "logger-event-emitter";
 import { buildApiServer } from "./http/build_api_server";
+import { DockerConnector } from "./lib/docker-connector";
+import { Restarter } from "./lib/restarter";
 
 const logger = new LoggerEventEmitter(config.logger);
 
 logger.debug(`\nCONFIG:\n${JSON.stringify(config, null, 4)}`);
 
+const docker_connector = new DockerConnector(config.docker, logger.child("docker-connector"));
+const restarter = new Restarter(docker_connector, config.healthcheck, logger.child("healthcheck"));
+
 const bootstrap = async () => {
 
     try {
+
+        await restarter.run();
 
         const api_server_logger = logger.child("api-server");
         const api_server = buildApiServer(config.api, api_server_logger);
@@ -30,6 +37,7 @@ const bootstrap = async () => {
         }
 
         const stop_app = async () => {
+            //await restarter.close();
             await api_server.close();
             process.exit();
         };

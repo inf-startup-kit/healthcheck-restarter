@@ -62,13 +62,13 @@ program.parse(process.argv);
 
 const options = program.opts<TOptions>();
 
-if (process.env["TEMPLATE_CONFIG_PATH"] === undefined) {
+if (process.env["HEALTHCHECK_RESTARTER_CONFIG_PATH"] === undefined) {
 	if (options.config === undefined) {
 		console.error(`${chalk.bgRed(" FATAL ")} Not set --config key`);
 		process.exit(1);
 	}
 } else {
-	options.config = process.env["TEMPLATE_CONFIG_PATH"];
+	options.config = process.env["HEALTHCHECK_RESTARTER_CONFIG_PATH"];
 }
 
 const full_config_path = path.resolve(process.cwd(), options.config);

@@ -4,30 +4,30 @@
         "logger": {
             "type": "object",
             "default": {},
-            "env": "TEMPLATE_LOGGER",
+            "env": "HEALTHCHECK_RESTARTER_LOGGER",
             "properties": {
                 "name": {
                     "type": "string",
                     "default": "",
-                    "env": "TEMPLATE_LOGGER_NAME",
+                    "env": "HEALTHCHECK_RESTARTER_LOGGER_NAME",
                     "minLength": 0,
                     "maxLength": 32
                 },
                 "enable": {
                     "type": "boolean",
                     "default": true,
-                    "env": "TEMPLATE_LOGGER_ENABLE"
+                    "env": "HEALTHCHECK_RESTARTER_LOGGER_ENABLE"
                 },
                 "level": {
                     "type": "string",
                     "default": "error",
-                    "env": "TEMPLATE_LOGGER_LEVEL",
+                    "env": "HEALTHCHECK_RESTARTER_LOGGER_LEVEL",
                     "enum": ["fatal","info","error","warn","debug","trace"]
                 },
                 "timestamp": {
                     "type": "string",
                     "default": "none",
-                    "env": "TEMPLATE_LOGGER_TIMESTAMP",
+                    "env": "HEALTHCHECK_RESTARTER_LOGGER_TIMESTAMP",
                     "enum": ["full","short","unix","none"]
                 }
             },
@@ -41,29 +41,29 @@
         "api": {
             "type": "object",
             "default": {},
-            "env": "TEMPLATE_API",
+            "env": "HEALTHCHECK_RESTARTER_API",
             "properties": {
                 "enable": {
                     "type": "boolean",
                     "default": false,
-                    "env": "TEMPLATE_API_ENABLE"
+                    "env": "HEALTHCHECK_RESTARTER_API_ENABLE"
                 },
                 "logging": {
                     "type": "boolean",
                     "default": false,
-                    "env": "TEMPLATE_API_LOGGING"
+                    "env": "HEALTHCHECK_RESTARTER_API_LOGGING"
                 },
                 "hostname": {
                     "type": "string",
                     "default": "0.0.0.0",
                     "minLength": 1,
                     "maxLength": 64,
-                    "env": "TEMPLATE_API_HOSTNAME"
+                    "env": "HEALTHCHECK_RESTARTER_API_HOSTNAME"
                 },
                 "port": {
                     "type": "integer",
                     "default": 3001,
-                    "env": "TEMPLATE_API_PORT",
+                    "env": "HEALTHCHECK_RESTARTER_API_PORT",
                     "minimum": 1,
                     "maximum": 65535
                 },
@@ -72,37 +72,37 @@
                     "default": "/api",
                     "minLength": 0,
                     "maxLength": 32,
-                    "env": "TEMPLATE_API_PREFIX",
+                    "env": "HEALTHCHECK_RESTARTER_API_PREFIX",
                     "pattern": "^(\/[a-zA-Z]{1}|)[-a-zA-Z0-9\/]{0,31}$"
                 },
                 "backlog": {
                     "type": "integer",
                     "default": 511,
-                    "env": "TEMPLATE_API_BACKLOG",
+                    "env": "HEALTHCHECK_RESTARTER_API_BACKLOG",
                     "minimum": 1
                 },
                 "connection_timeout": {
                     "type": "integer",
                     "default": 0,
-                    "env": "TEMPLATE_API_CONNECTION_TIMEOUT",
+                    "env": "HEALTHCHECK_RESTARTER_API_CONNECTION_TIMEOUT",
                     "minimum": 0
                 },
                 "keep_alive_timeout": {
                     "type": "integer",
                     "default": 5000,
-                    "env": "TEMPLATE_API_KEEP_ALIVE_TIMEOUT",
+                    "env": "HEALTHCHECK_RESTARTER_API_KEEP_ALIVE_TIMEOUT",
                     "minimum": 1
                 },
                 "body_limit": {
                     "type": "string",
                     "default": "1mb",
-                    "env": "TEMPLATE_API_BODY_LIMIT",
+                    "env": "HEALTHCHECK_RESTARTER_API_BODY_LIMIT",
                     "pattern": "^[0-9]{1,10}(b|kb|mb)$"
                 },
                 "trust_proxy": {
                     "type": "boolean",
                     "default": false,
-                    "env": "TEMPLATE_API_TRUST_PROXY"
+                    "env": "HEALTHCHECK_RESTARTER_API_TRUST_PROXY"
                 }
             },
             "required": [
@@ -117,10 +117,123 @@
                 "trust_proxy",
                 "logging"
             ]
+        },
+        "healthcheck": {
+            "type": "object",
+            "default": {},
+            "env": "HEALTHCHECK_RESTARTER_HEALTHCHECK",
+            "properties": {
+                "enable": {
+                    "type": "boolean",
+                    "default": false,
+                    "enum": [true,false],
+                    "env": "HEALTHCHECK_RESTARTER_HEALTHCHECK_ENABLE"
+                },
+                "label": {
+                    "type": "string",
+                    "default": "healthcheck.restarter",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "env": "HEALTHCHECK_RESTARTER_HEALTHCHECK_HOSTNAME"
+                },
+                "check_interval": {
+                    "type": "string",
+                    "default": "10s",
+                    "pattern": "^[0-9]{1}[smhd]{0,1}[0-9smhd]*[mhsd]{1}",
+                    "env": "HEALTHCHECK_RESTARTER_HEALTHCHECK_CHECK_INTERVAL"
+                }
+            },
+            "required": [
+                "enable",
+                "label",
+                "check_interval"
+            ]
+        },
+        "docker": {
+            "type": "object",
+            "default": {},
+            "env": "HEALTHCHECK_RESTARTER_DOCKER",
+            "properties": {
+                "protocol": {
+                    "type": "string",
+                    "default": "http",
+                    "enum": ["http","https","ssh"],
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_PROTOCOL"
+                },
+                "host": {
+                    "type": "string",
+                    "default": "",
+                    "minLength": 0,
+                    "maxLength": 128,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_HOST"
+                },
+                "port": {
+                    "type": "integer",
+                    "default": 2375,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_PORT",
+                    "minimum": 1
+                },
+                "ca": {
+                    "default": "",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 256,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_CA"
+                },
+                "cert": {
+                    "default": "",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 256,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_CERT"
+                },
+                "key": {
+                    "default": "",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 256,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_KEY"
+                },
+                "version": {
+                    "type": "string",
+                    "default": "v1.38",
+                    "minLength": 1,
+                    "maxLength": 64,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_VERSION"
+                },
+                "socket": {
+                    "default": "/var/run/docker.sock",
+                    "type": "string",
+                    "minLength": 0,
+                    "maxLength": 256,
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_SOCKET"
+                },
+                "ping_interval": {
+                    "type": "string",
+                    "default": "10s",
+                    "pattern": "^[0-9]{1}[smhd]{0,1}[0-9smhd]*[mhsd]{1}",
+                    "env": "HEALTHCHECK_RESTARTER_DOCKER_PING_INTERVAL"
+                }
+            },
+            "required": [
+                "version",
+                "host",
+                "port",
+                "key",
+                "cert",
+                "ca",
+                "protocol",
+                "socket",
+                "ping_interval"
+            ]
         }
     },
     "required": [
         "logger",
-        "api"
+        "api",
+        "healthcheck",
+        "docker"
     ]
 }
+
+

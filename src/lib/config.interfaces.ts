@@ -1,4 +1,6 @@
 import { ILoggerEventEmitterConfig } from "logger-event-emitter";
+import { IDockerConnectorConfig } from "./docker-connector";
+import { IRestarterConfig } from "./restarter/interfaces";
 
 export interface IApiServerConfig {
     enable: boolean
@@ -16,4 +18,6 @@ export interface IApiServerConfig {
 export interface IAppConfig {
     logger: ILoggerEventEmitterConfig
     api: IApiServerConfig
+    docker: IDockerConnectorConfig
+    healthcheck: IRestarterConfig
 }
